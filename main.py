@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from routes import upload
 import os
 import base64
@@ -12,10 +12,7 @@ app.include_router(upload.router)
 async def check_credentials():
     creds_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
-    # Decodificar las credenciales desde base64
-    decoded_credentials = base64.b64decode(creds_path)
+    if not creds_path:
+        raise HTTPException(status_code=400, detail="GOOGLE_APPLICATION_CREDENTIALS is not set")
 
-    # Cargar las credenciales en Google Cloud
-    credentials = service_account.Credentials.from_service_account_info(decoded_credentials)
-
-    return {"GOOGLE_APPLICATION_CREDENTIALS": credentials}
+    return {"GOOGLE_APPLICATION_CREDENTIALS": creds_path}
