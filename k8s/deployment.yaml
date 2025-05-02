@@ -27,12 +27,16 @@ spec:
         #       name: cloud-storage-key
         #       key: cloud-storage-key.json
         env:
-          - name: GOOGLE_APPLICATION_CREDENTIALS
-            # value: /secrets/gke-sa-key.json
-            valueFrom:
-              secretKeyRef:
-                name: gke-sa-key
-                key: gke-sa-key.json
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /secrets/gke-sa-key.json
+        volumeMounts:
+          - name: gcp-sa-key
+            mountPath: /secrets
+            readOnly: true
+        volumes:
+          - name: gcp-sa-key
+            secret:
+              secretName: gke-sa-key
         resources:
           limits:
             cpu: "50m"
