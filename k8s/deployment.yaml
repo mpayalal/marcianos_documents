@@ -20,12 +20,6 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
-        # env:
-        # - name: KEY_PATH
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: cloud-storage-key
-        #       key: cloud-storage-key.json
         env:
           - name: GOOGLE_APPLICATION_CREDENTIALS
             value: /secrets/gke-sa-key.json
@@ -40,7 +34,7 @@ spec:
           requests:
             cpu: "50m"
             memory: "100Mi"
-    volumes:
-        - name: gke-sa-key
-          secret:
-            secretName: gke-sa-key
+      volumes:  
+      - name: gke-sa-key
+        secret:
+          secretName: gke-sa-key
