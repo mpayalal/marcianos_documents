@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lotso-documents
+  labels:
+    app: lotso-documents
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lotso-documents
+  template:
+    metadata:
+      labels:
+        app: lotso-documents
+    spec:
+      containers:
+      - name: lotso-documents
+        image: mpayalal/lotso-documents:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: KEY_PATH
+          valueFrom:
+            secretKeyRef:
+              name: cloud-storage-key
+              key: cloud-storage-key.json
+        resources:
+          limits:
+            cpu: "50m"
+            memory: "100Mi"
+          requests:
+            cpu: "50m"
+            memory: "100Mi"
