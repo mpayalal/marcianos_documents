@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env
+*.env
+
+# FastAPI
+*.log
+
+# IDEs / Editors
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependency files (optional, keep only one)
+poetry.lock
+Pipfile.lock
