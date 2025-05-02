@@ -25,11 +25,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: gke-sa-key  # Nombre del secreto
-              key: gke-sa-key.json
-        volumeMounts:
-          - name: gke-sa-key
-            mountPath: /secrets
-            readOnly: true
+              key: gke-sa-key.json  # La clave en el secreto
         resources:
           limits:
             cpu: "50m"
@@ -37,7 +33,3 @@ spec:
           requests:
             cpu: "50m"
             memory: "100Mi"
-      volumes:  
-      - name: gke-sa-key
-        secret:
-          secretName: gke-sa-key
