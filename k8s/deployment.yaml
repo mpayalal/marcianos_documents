@@ -21,8 +21,11 @@ spec:
         ports:
         - containerPort: 8080
         env:
-          - name: GOOGLE_APPLICATION_CREDENTIALS
-            value: /secrets/gke-sa-key.json
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          valueFrom:
+            secretKeyRef:
+              name: gke-sa-key  # Nombre del secreto
+              key: gke-sa-key.json
         volumeMounts:
           - name: gke-sa-key
             mountPath: /secrets
