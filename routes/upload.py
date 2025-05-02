@@ -1,14 +1,8 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from google.cloud import storage
 from gcstorage_class import GCStorage
-from dotenv import load_dotenv
 
-import os
-
-load_dotenv()
 router = APIRouter()
-
-KEY_PATH = os.getenv("KEY_PATH")
 
 @router.post("/uploadDocument")
 async def upload_file_to_user_bucket(
@@ -18,7 +12,7 @@ async def upload_file_to_user_bucket(
     try:
         bucket_name = username.lower()
 
-        gcs = GCStorage(storage.Client.from_service_account_json(KEY_PATH))
+        gcs = GCStorage(storage.Client())
         
         if not bucket_name in gcs.list_buckets():
             bucket_gcs = gcs.create_bucket(bucket_name, 'STANDARD')
