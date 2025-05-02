@@ -30,11 +30,11 @@ spec:
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /secrets/gke-sa-key.json
         volumeMounts:
-          - name: gcp-sa-key
+          - name: gke-sa-key
             mountPath: /secrets
             readOnly: true
         volumes:
-          - name: gcp-sa-key
+          - name: gke-sa-key
             secret:
               secretName: gke-sa-key
         resources:
