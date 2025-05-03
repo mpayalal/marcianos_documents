@@ -28,7 +28,7 @@ async def upload_file_to_user_bucket(
         gcs.upload_file_from_bytes(bucket_gcs, file_name, content, file.content_type)
 
         return {
-            "message": f"Archivo '{file.filename}' subido correctamente al bucket '{bucket_name}'",
+            "message": f"Archivo '{file.filename}' subido correctamente a la carpeta '{client_id}'",
         }
 
     except Exception as e:
