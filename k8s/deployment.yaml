@@ -15,21 +15,26 @@ spec:
         app: lotso-documents
     spec:
       containers:
-      - name: lotso-documents
-        image: mpayalal/lotso-documents:latest
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 8080
-        env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          valueFrom:
-            secretKeyRef:
-              name: gke-sa-key  # Nombre del secreto
-              key: gke-sa-key.json  # La clave en el secreto
-        resources:
-          limits:
-            cpu: "50m"
-            memory: "100Mi"
-          requests:
-            cpu: "50m"
-            memory: "100Mi"
+        - name: lotso-documents
+          image: mpayalal/lotso-documents:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+            - name: gcp-key
+              mountPath: /secrets/gcp
+              readOnly: true
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /secrets/gcp/key.json
+          resources:
+            limits:
+              cpu: "50m"
+              memory: "100Mi"
+            requests:
+              cpu: "50m"
+              memory: "100Mi"
+      volumes:
+        - name: gcp-key
+          secret:
+            secretName: gcp-sa-key

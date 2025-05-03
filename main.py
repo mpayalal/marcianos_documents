@@ -1,18 +1,20 @@
 from fastapi import FastAPI, HTTPException
 from routes import upload
-import os
-import base64
-from google.oauth2 import service_account
+from google.cloud import storage
+from google.auth.exceptions import DefaultCredentialsError
 
 app = FastAPI()
 
 app.include_router(upload.router)
 
-@app.get("/check-credentials")
-async def check_credentials():
-    creds_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
-
-    if not creds_path:
-        raise HTTPException(status_code=400, detail="GOOGLE_APPLICATION_CREDENTIALS is not set")
-
-    return {"GOOGLE_APPLICATION_CREDENTIALS": creds_path}
+@app.get("/verify-gcs")
+def verify_gcs_credentials():
+    try:
+        client = storage.Client()
+        buckets = list(client.list_buckets())
+        bucket_names = [bucket.name for bucket in buckets]
+        return {"status": "success", "buckets": bucket_names}
+    except DefaultCredentialsError as e:
+        raise HTTPException(status_code=500, detail=f"Credenciales no encontradas o inválidas: {e}")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error al acceder a GCS: {e}")
