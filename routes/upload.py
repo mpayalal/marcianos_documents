@@ -10,8 +10,8 @@ async def upload_file_to_user_bucket(
     username: str = Form(...)
 ):
     try:
-        bucket_name = username.lower()
-
+        # bucket_name = username.lower()
+        bucket_name = "mpayalal"
         gcs = GCStorage(storage.Client())
         
         if not bucket_name in gcs.list_buckets():
