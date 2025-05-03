@@ -61,6 +61,14 @@ jobs:
       run: |
         kubectl get namespace ${{ env.NAMESPACE }} || kubectl create namespace ${{ env.NAMESPACE }}
 
+    # Create SA KEY secret
+    - name: Create GCP Secret
+      run: |
+        echo "${{ secrets.GKE_SA_KEY }}" > key.json
+        kubectl delete secret gcp -n ${{ env.NAMESPACE }} --ignore-not-found
+        kubectl create secret generic gcp --from-file=key.json=key.json -n ${{ env.NAMESPACE }}
+        rm key.json
+
 
     - name: Login to Docker Hub
       uses: docker/login-action@v1

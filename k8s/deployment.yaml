@@ -21,12 +21,12 @@ spec:
           ports:
           - containerPort: 8080
           volumeMounts:
-            - name: gcp-key
-              mountPath: /secrets/gcp
+            - name: gcp-credentials
+              mountPath: /secrets
               readOnly: true
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /secrets/gcp/key.json
+              value: /secrets/key.json
           resources:
             limits:
               cpu: "50m"
@@ -35,6 +35,6 @@ spec:
               cpu: "50m"
               memory: "100Mi"
       volumes:
-        - name: gcp-key
+        - name: gcp-credentials
           secret:
-            secretName: gcp-sa-key
+            secretName: gcp
