@@ -1,16 +1,15 @@
 from fastapi import FastAPI, HTTPException
-from routes import upload
+from routes import upload, list_files
 from google.cloud import storage
 from google.auth.exceptions import DefaultCredentialsError
-from google.oauth2 import service_account
 import os
-import json
 from dotenv import load_dotenv
 
 
 app = FastAPI()
 
 app.include_router(upload.router)
+app.include_router(list_files.router)
 
 @app.get("/verify-gcs")
 def verify_gcs_credentials():
