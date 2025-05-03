@@ -27,8 +27,6 @@ spec:
           env:
           - name: GCP_SA_KEY
             value: /secrets/gcp/key.json
-          - name: GCP_BUCKET_NAME
-            value: lotso_bucket
           resources:
             limits:
               cpu: "50m"
