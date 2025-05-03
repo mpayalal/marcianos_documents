@@ -30,8 +30,8 @@ class GCStorage:
         blob.upload_from_string(file_bytes, content_type=content_type)
         return blob
     
-    def list_blobs(self, bucket_name: str):
-        return self.client.list_blobs(bucket_name)
+    def list_blobs(self, bucket_name: str, folder: str):
+        return self.client.list_blobs(bucket_or_name=bucket_name, prefix=folder)
     
     def get_blob(self, bucket_name: str, blob_name: str):
         bucket = self.client.get_bucket(bucket_name)
