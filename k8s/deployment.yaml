@@ -25,7 +25,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: gcp
-                key: key.json
+                key: GCP_CREDENTIALS_JSON
           resources:
             limits:
               cpu: "50m"
