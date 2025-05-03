@@ -1,32 +1,22 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException, Form
+import os
+from dotenv import load_dotenv
 from google.cloud import storage
 from gcstorage_class import GCStorage
-from google.oauth2 import service_account
-import os
-import json
-from dotenv import load_dotenv
+from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 
 router = APIRouter()
 
 @router.post("/uploadDocument")
 async def upload_file_to_user_bucket(
     file: UploadFile = File(...),
-    username: str = Form(...)
+    client_id: str = Form(...)
 ):
     try:
-        bucket_name = username.lower()
-        # bucket_name = "mpayalal"
+        bucket_name = 'lotso_bucket'
 
         load_dotenv()
         creds_path = os.getenv("GCP_SA_KEY")
-        print(creds_path)
-
-        # client = storage.Client.from_service_account_json(creds_path)
         gcs = GCStorage(storage.Client.from_service_account_json(creds_path))
-
-        #fin prueba
-
-        # gcs = GCStorage(storage.Client())
         
         if not bucket_name in gcs.list_buckets():
             bucket_gcs = gcs.create_bucket(bucket_name, 'STANDARD')
@@ -34,8 +24,8 @@ async def upload_file_to_user_bucket(
             bucket_gcs = gcs.get_bucket(bucket_name)
 
         content = await file.read()
-
-        gcs.upload_file_from_bytes(bucket_gcs, file.filename, content, file.content_type)
+        file_name = f"{client_id}/{file.filename}"
+        gcs.upload_file_from_bytes(bucket_gcs, file_name, content, file.content_type)
 
         return {
             "message": f"Archivo '{file.filename}' subido correctamente al bucket '{bucket_name}'",
