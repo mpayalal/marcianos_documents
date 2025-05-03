@@ -14,19 +14,34 @@ spec:
       labels:
         app: lotso-documents
     spec:
+      initContainers:
+        - name: init-gcp-credentials
+          image: busybox:1.35.0-uclibc
+          command:
+            - sh
+            - -c
+            - "cp /secrets/key.json /tmp/key.json"
+          volumeMounts:
+            - name: gcp-credentials
+              mountPath: /secrets
+              readOnly: true
+            - name: temp-storage
+              mountPath: /tmp
       containers:
         - name: lotso-documents
           image: mpayalal/lotso-documents:latest
           imagePullPolicy: IfNotPresent
           ports:
-          - containerPort: 8080
+            - containerPort: 8080
           volumeMounts:
             - name: gcp-credentials
               mountPath: /secrets
               readOnly: true
+            - name: temp-storage
+              mountPath: /tmp
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /secrets/key.json
+              value: /tmp/key.json  # Usar el archivo copiado
           resources:
             limits:
               cpu: "50m"
@@ -38,3 +53,5 @@ spec:
         - name: gcp-credentials
           secret:
             secretName: gcp
+        - name: temp-storage
+          emptyDir: {}
