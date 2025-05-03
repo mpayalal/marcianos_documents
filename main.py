@@ -35,6 +35,7 @@ def verify_gcs_credentials():
 
         # Leer y parsear el JSON desde la variable de entorno
         creds_json = os.getenv("GCP_SA_KEY")
+        print(creds_json)
 
         if not creds_json:
             raise Exception("Falta la variable GCP_SA_KEY")
