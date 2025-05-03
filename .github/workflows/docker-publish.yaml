@@ -83,7 +83,7 @@ jobs:
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
-        kubectl get deployment ${{ env.DEPLOYMENT_NAME }} -n ${{ env.NAMESPACE }} || kubectl create deployment ${{ env.DEPLOYMENT_NAME }} --image=mpayalal/${{ env.IMAGE_NAME }}:${{ needs.generate-version.outputs.new_tag }} -n ${{ env.NAMESPACE }}
+        kubectl apply -f k8s/deployment.yaml -n ${{ env.NAMESPACE }}
         kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} ${{ env.DEPLOYMENT_NAME }}=mpayalal/${{ env.IMAGE_NAME }}:${{ needs.generate-version.outputs.new_tag }} -n ${{ env.NAMESPACE }}
         kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.NAMESPACE }}
     - name: Check deployment success
