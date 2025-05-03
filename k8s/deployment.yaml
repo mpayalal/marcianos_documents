@@ -20,12 +20,13 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          volumeMounts:
+          - name: gcp-sa-volume
+            mountPath: /secrets/gcp
+            readOnly: true
           env:
-          - name: GCP_CREDENTIALS_JSON
-            valueFrom:
-              secretKeyRef:
-                name: gcp
-                key: GCP_CREDENTIALS_JSON
+          - name: GCP_SA_KEY
+            value: /secrets/gcp/key.json
           resources:
             limits:
               cpu: "50m"
@@ -33,3 +34,7 @@ spec:
             requests:
               cpu: "50m"
               memory: "100Mi"
+      volumes:
+        - name: gcp-sa-volume
+          secret:
+            secretName: gcp-sa

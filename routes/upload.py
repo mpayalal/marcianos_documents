@@ -4,6 +4,7 @@ from gcstorage_class import GCStorage
 from google.oauth2 import service_account
 import os
 import json
+from dotenv import load_dotenv
 
 router = APIRouter()
 
@@ -13,24 +14,26 @@ async def upload_file_to_user_bucket(
     username: str = Form(...)
 ):
     try:
-        # bucket_name = username.lower()
-        bucket_name = "mpayalal"
+        bucket_name = username.lower()
+        # bucket_name = "mpayalal"
 
-        #prueba
-        # Leer JSON desde variable de entorno
-        json_str = os.getenv("GCP_CREDENTIALS_JSON")
-        if not json_str:
-            raise RuntimeError("GCP_CREDENTIALS_JSON not set")
+        # Cargar .env
+        load_dotenv()
 
-        # Convertir a dict y crear credenciales
-        info = json.loads(json_str)
-        credentials = service_account.Credentials.from_service_account_info(info)
+        # Leer y parsear el JSON desde la variable de entorno
+        creds_json = os.getenv("GCP_SA_KEY")
 
-        # Usar las credenciales explícitas
-        gcs = GCStorage(storage.Client(credentials=credentials))
+        if not creds_json:
+            raise Exception("Falta la variable GCP_SA_KEY")
+
+        creds_dict = json.loads(creds_json)
+
+        # Crear el cliente con las credenciales
+        credentials = service_account.Credentials.from_service_account_info(creds_dict)
+        gcs = GCStorage(storage.Client(credentials=credentials, project=creds_dict["project_id"]))
 
         #fin prueba
-        
+
         # gcs = GCStorage(storage.Client())
         
         if not bucket_name in gcs.list_buckets():
