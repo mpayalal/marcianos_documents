@@ -64,10 +64,9 @@ jobs:
     # Create SA KEY secret
     - name: Create GCP Secret
       run: |
-        echo "${{ secrets.GKE_SA_KEY }}" > key.json
+        ENCODED_KEY=$(echo "${{ secrets.GKE_SA_KEY }}" | base64 -w 0)
         kubectl delete secret gcp -n ${{ env.NAMESPACE }} --ignore-not-found
-        kubectl create secret generic gcp --from-file=GCP_CREDENTIALS_JSON=key.json -n ${{ env.NAMESPACE }}
-        rm key.json
+        kubectl create secret generic gcp --from-literal=GCP_CREDENTIALS_JSON="$ENCODED_KEY" -n ${{ env.NAMESPACE }}
 
 
     - name: Login to Docker Hub

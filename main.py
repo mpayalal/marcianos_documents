@@ -5,6 +5,8 @@ from google.auth.exceptions import DefaultCredentialsError
 from google.oauth2 import service_account
 import os
 import json
+import base64
+
 
 app = FastAPI()
 
@@ -14,18 +16,21 @@ app.include_router(upload.router)
 def verify_gcs_credentials():
     try:
         #prueba
-        # Leer JSON desde variable de entorno
-        json_str = os.getenv("GCP_CREDENTIALS_JSON")
-        if not json_str:
-            raise RuntimeError("GCP_CREDENTIALS_JSON not set")
+        credentials_b64 = os.getenv("GCP_CREDENTIALS_JSON")
+        if not credentials_b64:
+            raise Exception("GCP_CREDENTIALS_JSON not set")
 
-        # Convertir a dict y crear credenciales
-        info = json.loads(json_str)
-        credentials = service_account.Credentials.from_service_account_info(info)
+        decoded = base64.b64decode(credentials_b64)
+
+        # Guarda el archivo temporalmente
+        with open("/tmp/key.json", "wb") as f:
+            f.write(decoded)
+
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/tmp/key.json"
 
         #fin prueba
 
-        client = storage.Client(credentials=credentials)
+        client = storage.Client()
         buckets = list(client.list_buckets())
         bucket_names = [bucket.name for bucket in buckets]
         return {"status": "success", "buckets": bucket_names}
