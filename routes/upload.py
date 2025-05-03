@@ -7,7 +7,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 router = APIRouter()
 
 @router.post("/uploadDocument")
-async def upload_file_to_user_bucket(
+async def upload_file_to_user_folder(
     file: UploadFile = File(...),
     client_id: str = Form(...)
 ):
@@ -23,9 +23,9 @@ async def upload_file_to_user_bucket(
         else:
             bucket_gcs = gcs.get_bucket(bucket_name)
 
-        content = await file.read()
+        # content = await file.read()
         file_name = f"{client_id}/{file.filename}"
-        gcs.upload_file_from_bytes(bucket_gcs, file_name, content, file.content_type)
+        gcs.upload_file_from_stream(bucket_gcs, file_name,  file.file, file.content_type)
 
         return {
             "message": f"Archivo '{file.filename}' subido correctamente a la carpeta '{client_id}'",

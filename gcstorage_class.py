@@ -17,17 +17,9 @@ class GCStorage:
         buckets = self.client.list_buckets()
         return [bucket.name for bucket in buckets]
     
-    def upload_file(self, bucket, blob_name, file_path):
-        content_type = mimetypes.guess_type(file_path)[0]
-
+    def upload_file_from_stream(self, bucket, blob_name: str, stream, content_type: str):
         blob = bucket.blob(blob_name)
-        blob.upload_from_filename(file_path, content_type=content_type)
-        return blob
-    
-    def upload_file_from_bytes(self, bucket, blob_name: str, file_bytes: bytes, content_type: str):
-        blob = bucket.blob(blob_name)
-
-        blob.upload_from_string(file_bytes, content_type=content_type)
+        blob.upload_from_file(stream, content_type=content_type)
         return blob
     
     def list_blobs(self, bucket_name: str, folder: str):
