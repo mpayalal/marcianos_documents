@@ -15,25 +15,8 @@ app.include_router(upload.router)
 @app.get("/verify-gcs")
 def verify_gcs_credentials():
     try:
-        #prueba
-        # credentials_b64 = os.getenv("GCP_CREDENTIALS_JSON")
-        # if not credentials_b64:
-        #     raise Exception("GCP_CREDENTIALS_JSON not set")
-
-        # decoded = base64.b64decode(credentials_b64)
-
-        # # Guarda el archivo temporalmente
-        # with open("/tmp/key.json", "wb") as f:
-        #     f.write(decoded)
-
-        # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/tmp/key.json"
-
-        #fin prueba
-
-        # Cargar .env
+        # Tomar variable de entorno 
         load_dotenv()
-
-        # Leer y parsear el JSON desde la variable de entorno
         creds_path = os.getenv("GCP_SA_KEY")
         print(creds_path)
 

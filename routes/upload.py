@@ -17,20 +17,12 @@ async def upload_file_to_user_bucket(
         bucket_name = username.lower()
         # bucket_name = "mpayalal"
 
-        # Cargar .env
         load_dotenv()
+        creds_path = os.getenv("GCP_SA_KEY")
+        print(creds_path)
 
-        # Leer y parsear el JSON desde la variable de entorno
-        creds_json = os.getenv("GCP_SA_KEY")
-
-        if not creds_json:
-            raise Exception("Falta la variable GCP_SA_KEY")
-
-        creds_dict = json.loads(creds_json)
-
-        # Crear el cliente con las credenciales
-        credentials = service_account.Credentials.from_service_account_info(creds_dict)
-        gcs = GCStorage(storage.Client(credentials=credentials, project=creds_dict["project_id"]))
+        # client = storage.Client.from_service_account_json(creds_path)
+        gcs = GCStorage(storage.Client.from_service_account_json(creds_path))
 
         #fin prueba
 
