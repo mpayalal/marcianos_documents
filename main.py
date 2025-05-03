@@ -40,6 +40,7 @@ def verify_gcs_credentials():
             raise Exception("Falta la variable GCP_SA_KEY")
 
         creds_dict = json.loads(creds_json)
+        print(creds_dict)
 
         # Crear el cliente con las credenciales
         credentials = service_account.Credentials.from_service_account_info(creds_dict)
