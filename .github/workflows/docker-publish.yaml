@@ -71,19 +71,19 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./Dockerfile
+        file: ./Docker/Dockerfile.api
         push: true
         tags: mpayalal/${{ env.IMAGE_NAME }}:latest, mpayalal/${{ env.IMAGE_NAME }}:${{ needs.generate-version.outputs.new_tag }}
 
     # Service
     - name: Apply Kubernetes Service
       run: |
-        kubectl apply -f k8s/service.yaml -n ${{ env.NAMESPACE }}
+        kubectl apply -f k8s/service-api.yaml -n ${{ env.NAMESPACE }}
 
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
-        kubectl apply -f k8s/deployment.yaml -n ${{ env.NAMESPACE }}
+        kubectl apply -f k8s/deployment-api.yaml -n ${{ env.NAMESPACE }}
         kubectl set image deployment/${{ env.DEPLOYMENT_NAME }} ${{ env.DEPLOYMENT_NAME }}=mpayalal/${{ env.IMAGE_NAME }}:${{ needs.generate-version.outputs.new_tag }} -n ${{ env.NAMESPACE }}
         kubectl rollout status deployment/${{ env.DEPLOYMENT_NAME }} -n ${{ env.NAMESPACE }}
     - name: Check deployment success
