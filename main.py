@@ -34,18 +34,10 @@ def verify_gcs_credentials():
         load_dotenv()
 
         # Leer y parsear el JSON desde la variable de entorno
-        creds_json = os.getenv("GCP_SA_KEY")
-        print(creds_json)
+        creds_path = os.getenv("GCP_SA_KEY")
+        print(creds_path)
 
-        if not creds_json:
-            raise Exception("Falta la variable GCP_SA_KEY")
-
-        creds_dict = json.loads(creds_json)
-        print(creds_dict)
-
-        # Crear el cliente con las credenciales
-        credentials = service_account.Credentials.from_service_account_info(creds_dict)
-        client = storage.Client(credentials=credentials, project=creds_dict["project_id"])
+        client = storage.Client.from_service_account_json(creds_path)
 
         # client = storage.Client()
         buckets = list(client.list_buckets())
