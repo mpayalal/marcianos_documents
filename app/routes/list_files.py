@@ -7,10 +7,8 @@ from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter()
 
-@router.get("/listDocuments")
-async def list_documents_from_user_folder(
-    client_id: str = Query(...)
-):
+@router.get("/folder/{client_id}")
+async def list_documents_from_user_folder(client_id: str):
     try:
         load_dotenv()
         creds_path = os.getenv("GCP_SA_KEY")
