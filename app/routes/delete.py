@@ -23,6 +23,12 @@ async def delete_folder_from_bucket(
             deleted_files.append(file.name)
             file.delete()
 
+        # Eliminar posible "objeto-carpeta"
+        bucket = gcs.get_bucket(bucket_name)
+        placeholder_blob = bucket.blob(f"{client_id}/")
+        if placeholder_blob.exists():
+            placeholder_blob.delete()
+
         return {
             "message": f"Se eliminaron {len(deleted_files)} archivos del cliente {client_id}.",
             "files": deleted_files
