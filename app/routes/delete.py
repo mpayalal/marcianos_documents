@@ -60,7 +60,7 @@ async def delete_file_from_bucket(
         }
 
         # Mandamos mensaje
-        publish_to_rabbitmq(message)
+        await publish_to_rabbitmq(message)
 
         return {"message": f"El archivo '{file_name}' del cliente {client_id} está siendo procesado para eliminación."}
     
@@ -79,7 +79,7 @@ async def delete_folder_from_bucket(
         }
 
         # Mandamos mensaje
-        publish_to_rabbitmq(message)
+        await publish_to_rabbitmq(message)
 
         return {"message": f"Los archivos de la carpeta del cliente {client_id} están siendo procesados para eliminación."}
     
