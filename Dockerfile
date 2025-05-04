@@ -15,8 +15,8 @@ COPY app/ .
 
 
 # Copy k8s
-COPY k8s/deployment-api.yaml .
-COPY k8s/service-api.yaml .
+COPY k8s/deployment.yaml .
+COPY k8s/service.yaml .
 
 # Expose the port on which the application will run
 EXPOSE 8080
