@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Form
-from pydantic import BaseModel
+import os
 import json
-import pika  # RabbitMQ client
-from google.cloud import storage
+import asyncio
+from pydantic import BaseModel
+from aio_pika import connect_robust, Message
+from fastapi import APIRouter, HTTPException, Form
 
 router = APIRouter()
 
@@ -13,28 +14,37 @@ class DeleteFileRequest(BaseModel):
 class DeleteFolderRequest(BaseModel):
     client_id: str
 
-def publish_to_rabbitmq(message: dict):
-    # Conectar a RabbitMQ y publicar el mensaje
-    connection = pika.BlockingConnection(pika.ConnectionParameters(
-        host='my-rabbitmq.rabbitmq-ns.svc.cluster.local', 
-        port=5672
-    ))
-    channel = connection.channel()
+rabbitmq_user = os.getenv("RABBITMQ_USER") 
+print(rabbitmq_user)
+rabbitmq_pass = os.getenv("RABBITMQ_PASSWORD")
+print(rabbitmq_pass)
+rabbitmq_host = os.getenv("RABBITMQ_HOST")
+print(rabbitmq_host)
+rabbitmq_port = os.getenv("RABBITMQ_PORT")
+print(rabbitmq_port)
 
-    # Cola de eliminación
-    channel.queue_declare(queue='delete_files', durable=True)
-
-    # Mandamos mensaje
-    channel.basic_publish(
-        exchange='',
-        routing_key='delete_files',
-        body=json.dumps(message),
-        properties=pika.BasicProperties(
-            delivery_mode=2,
+async def connect_to_rabbit():
+    try:
+        connection = await connect_robust(
+            host=rabbitmq_host,
+            login=rabbitmq_user,
+            password=rabbitmq_pass
         )
-    )
-
-    connection.close()
+        print(connection)
+        return connection
+    except Exception as e:
+        raise Exception(f"RabbitMQ connection error: {e}")
+    
+async def publish_to_rabbitmq(message_body: dict):
+    try:
+        connection = await connect_to_rabbit()
+        async with connection:
+            channel = await connection.channel()
+            queue = await channel.declare_queue('delete_files', durable=True)
+            message = Message(body=json.dumps(message_body).encode())
+            await channel.default_exchange.publish(message, routing_key=queue.name)
+    except Exception as e:
+        raise Exception(f"RabbitMQ publish error: {e}")
 
 @router.post("/deleteFile")
 async def delete_file_from_bucket(

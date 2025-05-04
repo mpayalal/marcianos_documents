@@ -29,6 +29,17 @@ spec:
             value: /secrets/gcp/key.json
           - name: GCP_BUCKET_NAME
             value: lotso_bucket
+          - name: RABBITMQ_USER
+            value: marciano
+          - name: RABBITMQ_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: my-rabbitmq
+                key: rabbitmq-password
+          - name: RABBITMQ_HOST
+            value: rabbitmq.rabbitmq-ns.svc.cluster.local
+          - name: RABBITMQ_PORT
+            value: 5672
           resources:
             limits:
               cpu: "50m"
