@@ -39,7 +39,7 @@ spec:
           - name: RABBITMQ_HOST
             value: rabbitmq.rabbitmq-ns.svc.cluster.local
           - name: RABBITMQ_PORT
-            value: 5672
+            value: "5672"
           resources:
             limits:
               cpu: "50m"
