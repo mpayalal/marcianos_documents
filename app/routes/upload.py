@@ -6,7 +6,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 
 router = APIRouter()
 
-@router.post("/uploadDocument")
+@router.post("/v1/documents/uploadDocument")
 async def upload_file_to_user_folder(
     file: UploadFile = File(...),
     client_id: str = Form(...)

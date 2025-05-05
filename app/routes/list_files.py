@@ -7,7 +7,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 router = APIRouter()
 
-@router.get("/folder/{client_id}")
+@router.get("/v1/documents/folder/{client_id}")
 async def list_documents_from_user_folder(client_id: str):
     try:
         load_dotenv()

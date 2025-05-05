@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, Form
 
 router = APIRouter()
 
-@router.delete("/folder/{client_id}")
+@router.delete("/v1/documents/folder/{client_id}")
 async def delete_folder_from_bucket(client_id: str):
     try:
         creds_path = os.getenv("GCP_SA_KEY")
