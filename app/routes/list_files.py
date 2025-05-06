@@ -32,9 +32,7 @@ async def list_documents_from_user_folder(client_id: str):
             }
 
 
-        return {
-            "documents": documents
-        }
+        return documents
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
