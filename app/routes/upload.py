@@ -25,7 +25,8 @@ async def upload_file_to_user_folder(
 
         # content = await file.read()
         file_name = f"{client_id}/{file.filename}"
-        gcs.upload_file_from_stream(bucket_gcs, file_name,  file.file, file.content_type)
+        metadata = {"firmado": "false"}
+        gcs.upload_file_from_stream(bucket_gcs, file_name,  file.file, file.content_type, metadata)
 
         return {
             "message": f"Archivo '{file.filename}' subido correctamente a la carpeta '{client_id}'",

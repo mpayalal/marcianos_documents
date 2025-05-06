@@ -26,7 +26,11 @@ async def list_documents_from_user_folder(client_id: str):
             )
 
             # Obtener nombre del archivo y ponerlo como llave
-            documents[os.path.basename(blob.name)] = url
+            documents[os.path.basename(blob.name)] = {
+                "url": url,
+                "firmado": blob.metadata.get("firmado")
+            }
+
 
         return {
             "documents": documents
