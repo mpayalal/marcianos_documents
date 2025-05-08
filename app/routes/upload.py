@@ -56,7 +56,7 @@ async def upload_file_to_user_folder(
             db_file = FileModel.create_new(
                 user_id=user.id, 
                 file_name=file.filename,
-                type=file.content_type
+                file_type=file.content_type
             )
             db_file.file_path = file_name
             session.add(db_file)
@@ -68,4 +68,5 @@ async def upload_file_to_user_folder(
             }
 
     except Exception as e:
+        print(f"Error uploading file: {e}")
         raise HTTPException(status_code=500, detail=str(e))

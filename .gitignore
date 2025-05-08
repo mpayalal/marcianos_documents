@@ -3,7 +3,7 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-
+gpa.json
 # Virtual environment
 venv/
 .env

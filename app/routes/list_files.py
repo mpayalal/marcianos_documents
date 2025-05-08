@@ -31,7 +31,7 @@ async def list_documents_from_user_folder(
 
         documentsDb = File.get_all_files_by_user_id(session, user.id)
         if not documentsDb:
-            return {"documents": []}
+            return { "documents": [] }
         
         return { "documents": documentsDb }
         
