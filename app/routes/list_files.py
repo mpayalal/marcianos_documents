@@ -31,9 +31,9 @@ async def list_documents_from_user_folder(
 
         documentsDb = File.get_all_files_by_user_id(session, user.id)
         if not documentsDb:
-            return {"message": f"No se encontraron documentos para el usuario {user.documentNumber}"}
+            return {"documents": []}
         
-        return documentsDb
+        return { "documents": documentsDb }
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
